@@ -24,8 +24,8 @@ Every program/question is solved in python and C programing languages.
 
 ##  Technologies Used
 
-    -Python 3
-    -C
+- Python 3
+- C
 
 ##  Preview
 
