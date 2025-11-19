@@ -1,0 +1,81 @@
+import sys
+
+def dijkstra():
+    print("--- DIJKSTRA'S ALGORITHM (PYTHON) ---")
+    
+    try:
+        n = int(input("Enter the number of nodes: "))
+    except ValueError:
+        print("Invalid input.")
+        return
+
+    print("\nEnter the Cost Matrix (Row by Row).")
+    print("Use 9999 for infinite distance (no link). Use 0 for self.")
+    
+    # 1. Input the Graph
+    graph = []
+    for i in range(n):
+        print(f"Enter costs for Node {i}:")
+        try:
+            row = list(map(int, input().split()))
+            if len(row) != n:
+                print(f"Error: Please enter exactly {n} numbers.")
+                return
+            # Treat 0 as Infinity if it's not a self-loop (safety check)
+            for j in range(n):
+                if i != j and row[j] == 0:
+                    row[j] = 9999
+            graph.append(row)
+        except ValueError:
+            print("Invalid input. Numbers only.")
+            return
+
+    try:
+        src = int(input(f"\nEnter the Source Node (0 to {n-1}): "))
+        if src < 0 or src >= n:
+            print("Invalid source node.")
+            return
+    except ValueError:
+        print("Invalid input.")
+        return
+
+    # 2. Initialization
+    # dist[i] will hold the shortest distance from src to i
+    dist = [9999] * n
+    dist[src] = 0
+    visited = [False] * n
+
+    # 3. The Main Loop
+    for _ in range(n):
+        # Find the minimum distance vertex from the set of unvisited vertices
+        min_val = 9999
+        u = -1
+        
+        for v in range(n):
+            if not visited[v] and dist[v] < min_val:
+                min_val = dist[v]
+                u = v
+
+        # If we couldn't find a reachable node, break
+        if u == -1:
+            break
+
+        # Mark the picked vertex as visited
+        visited[u] = True
+
+        # Relaxation Step: Update dist value of the adjacent vertices
+        for v in range(n):
+            # If not visited, and there is a link, and the new path is shorter...
+            if (not visited[v] and graph[u][v] != 9999 and 
+                dist[u] + graph[u][v] < dist[v]):
+                dist[v] = dist[u] + graph[u][v]
+
+    # 4. Output
+    print(f"\n--- SHORTEST PATHS FROM NODE {src} ---")
+    print(f"{'Destination':<15} {'Min Cost':<10}")
+    print("-" * 25)
+    for i in range(n):
+        print(f"Node {i:<10} {dist[i]:<10}")
+
+if __name__ == "__main__":
+    dijkstra()
